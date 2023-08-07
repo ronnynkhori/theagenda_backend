@@ -22,6 +22,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Save data to environment file
+        run: echo "DATA_KEY=your-data-value" >> $GITHUB_ENV
+
       - name: Build and Push Docker Image
         run: |
           docker buildx create --use
@@ -30,3 +33,6 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/theagenda_backend:${{ github.sha }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/theagenda_backend:latest
 
+      - name: Read saved data from environment
+        run:
+          echo "Saved data: $DATA_KEY"
