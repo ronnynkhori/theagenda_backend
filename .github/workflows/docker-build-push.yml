@@ -34,5 +34,5 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/theagenda_backend:latest
 
       - name: Read saved data from environment
-        run:
+        run: |
           echo "Saved data: $DATA_KEY"
