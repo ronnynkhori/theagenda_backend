@@ -8,10 +8,13 @@ import com.example.theagenda.model.AuthenticationRequest;
 import com.example.theagenda.model.AuthenticationResponse;
 import com.example.theagenda.model.RegisterRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +61,31 @@ public class UserService {
                 .role(user.getRole().toString())
                 .email(user.getEmail())
                 .token(jwtToken).build();
+    }
+
+
+
+    public void deleteUser(Integer id) {
+        var user = repo.findById(id);
+        if(!user.isEmpty()){
+            repo.deleteById(id);
+        }
+    }
+
+    public User updateUser() {
+        return null;
+    }
+
+    public User getUserById(Integer id) {
+        var user = repo.findById(id);
+        if(!user.isEmpty()){
+
+        }
+
+        return null;
+    }
+
+    public List<User> getAllUsers() {
+       return repo.findAll();
     }
 }
