@@ -5,9 +5,9 @@ server:
 
 spring:
   datasource:
-    password: agenda
-    url: jdbc:postgresql://localhost:5432/agenda
-    username: agenda
+    password: postgres
+    url: jdbc:postgresql://164.92.135.84:5432/agenda
+    username: postgres
   jpa:
     hibernate:
       ddl-auto: create-drop
