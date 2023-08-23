@@ -1,0 +1,17 @@
+# application-prod.yml
+
+server:
+  port: 9090
+
+spring:
+  datasource:
+    password: postgres
+    url: jdbc:postgresql://164.92.135.84:5432/agenda
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
