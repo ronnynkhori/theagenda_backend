@@ -18,7 +18,10 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-
+  @GetMapping(path = "hello")
+  public String test() {
+      return "This is a test and it works";
+  }
 
     @PostMapping(path = "register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
