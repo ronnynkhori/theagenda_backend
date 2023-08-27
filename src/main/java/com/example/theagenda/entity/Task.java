@@ -19,11 +19,6 @@ public class Task extends AuditableEntity {
 
     private String description;
 
-
-    private List<String> contacts;
-
-    private List<String> photoUrls;
-
     @ManyToOne
     private User user;
 }

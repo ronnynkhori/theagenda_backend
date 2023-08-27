@@ -1,16 +1,16 @@
 # application-dev.yml
 
 server:
-  port: 9090
+  port: 9060
 
 spring:
   datasource:
-    password: postgres
-    url: jdbc:postgresql://164.92.135.84:5432/agenda
-    username: postgres
+    password: agenda
+    url: jdbc:postgresql://localhost:5432/agenda
+    username: agenda
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
