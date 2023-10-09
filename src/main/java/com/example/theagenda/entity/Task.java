@@ -1,6 +1,8 @@
 package com.example.theagenda.entity;
 
+import com.example.theagenda.enums.RequestStatus;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "Tasks")
+@EntityListeners(AuditingEntityListener.class)
 public class Task extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,6 +22,8 @@ public class Task extends AuditableEntity {
 
     private String description;
 
-    @ManyToOne
-    private User user;
+    private Integer userId;
+
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status;
 }

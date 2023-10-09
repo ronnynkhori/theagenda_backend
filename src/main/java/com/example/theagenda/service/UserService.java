@@ -14,7 +14,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -77,12 +79,13 @@ public class UserService {
     }
 
     public User getUserById(Integer id) {
-        var user = repo.findById(id);
-        if(!user.isEmpty()){
+        Optional<User> userOptional = repo.findById(id);
 
+        if (userOptional.isPresent()) {
+            return userOptional.get();
+        } else {
+            throw new EntityNotFoundException("User with id " + id + " not found");
         }
-
-        return null;
     }
 
     public List<User> getAllUsers() {
