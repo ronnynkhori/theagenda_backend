@@ -3,12 +3,16 @@ package com.example.theagenda.controller;
 import com.example.theagenda.entity.Task;
 import com.example.theagenda.entity.User;
 import com.example.theagenda.enums.RequestStatus;
+import com.example.theagenda.service.FileStorageService;
 import com.example.theagenda.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,10 +21,22 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskController {
     private final TaskService taskService;
+    private final FileStorageService fileStorageService;
 
     @GetMapping(path = "requests")
     public ResponseEntity<List<com.example.theagenda.entity.Task>> getAllRequests() {
         return new ResponseEntity<List<Task>>(taskService.getAllRequests(), HttpStatus.OK);
+    }
+
+
+
+    @PostMapping("/submit")
+    public ResponseEntity<Task> submitTask(@RequestParam String description,
+                                           @RequestParam String phoneNumber,
+                                           @RequestParam  RequestStatus status,
+                                           @RequestParam("images") MultipartFile[] images) {
+
+        return new ResponseEntity<>(taskService.savedTask(description,phoneNumber,status,images), HttpStatus.CREATED);
     }
 
 
@@ -36,7 +52,7 @@ public class TaskController {
     }
 
     @GetMapping(path = "user/{userId}/requests")
-    public ResponseEntity<List<Task>> getAllRequestsByUserId(@PathVariable Integer userId) {
+    public ResponseEntity<List<Task>> getAllRequestsByUserId(@PathVariable Long userId) {
         List<Task> tasks = taskService.getAllRequestsByUserId(userId);
 
         if (tasks.isEmpty()) {

@@ -60,6 +60,7 @@ public class UserService {
         return AuthenticationResponse.builder()
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
+                .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole().toString())
                 .email(user.getEmail())
                 .token(jwtToken).build();

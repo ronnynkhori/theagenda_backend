@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class AuthenticationResponse {
     String firstname;
     String lastname;
+    String phoneNumber;
     String email;
     String role;
     String token;

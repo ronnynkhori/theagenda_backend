@@ -2,12 +2,18 @@ package com.example.theagenda.service;
 
 
 import com.example.theagenda.UserRepo.TaskRepo;
+import com.example.theagenda.entity.Image;
 import com.example.theagenda.entity.Task;
 import com.example.theagenda.enums.RequestStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +22,9 @@ import java.util.Optional;
 public class TaskService {
 
     private final TaskRepo taskRepo;
-    public List<Task> getAllRequestsByUserId(Integer id) {
-        return taskRepo.findByUserId(id);
+    private final FileStorageService fileStorageService;
+    public List<Task> getAllRequestsByUserId(Long id) {
+        return taskRepo.findByPhoneNumber(id);
     }
 
     public Task saveRequet(Task request){
@@ -53,5 +60,28 @@ public class TaskService {
         } else {
             throw new EntityNotFoundException("Task not found with ID: " + taskId);
         }
+    }
+
+    public Task savedTask(String description, String phoneNumber, RequestStatus status, MultipartFile[] images) {
+        List<Image> storedImages = new ArrayList<>();
+
+        for (MultipartFile file : images) {
+            try {
+                String filePath = fileStorageService.storeFile(file);
+                Image image = new Image();
+                image.setPath(filePath);
+                storedImages.add(image);
+            } catch (IOException e) {
+                throw new RuntimeException("Error storing file", e);
+            }
+        }
+
+        Task task = new Task();
+        task.setDescription(description);
+        task.setPhoneNumber(Long.valueOf(phoneNumber));
+        task.setStatus(status);
+        task.setImages(storedImages);
+
+        return taskRepo.save(task);
     }
 }

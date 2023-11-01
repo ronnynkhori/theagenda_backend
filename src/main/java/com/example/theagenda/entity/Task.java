@@ -22,8 +22,13 @@ public class Task extends AuditableEntity {
 
     private String description;
 
-    private Integer userId;
+    @Column(name = "phone_number",unique = true)
+    private Long phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id")
+    private List<Image> images;
 }
