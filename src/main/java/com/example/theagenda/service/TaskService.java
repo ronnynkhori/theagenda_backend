@@ -13,7 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,12 +64,19 @@ public class TaskService {
         }
     }
 
-    public Task savedTask(String description, String phoneNumber, RequestStatus status, MultipartFile[] images) {
+    public Task savedTask(String description, String firstname, String lastname, String phoneNumber, RequestStatus status, MultipartFile[] images) {
         List<Image> storedImages = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss"); // Define the date format
 
         for (MultipartFile file : images) {
             try {
-                String filePath = fileStorageService.storeFile(file);
+                String originalFilename = file.getOriginalFilename();
+
+
+                String timestamp = dateFormat.format(new Date()); // Get current timestamp
+                String newFilename = timestamp + "_" + originalFilename; // Construct new filename with timestamp
+
+                String filePath = fileStorageService.storeFile(file, newFilename); // Pass the new filename to the storage service
                 Image image = new Image();
                 image.setPath(filePath);
                 storedImages.add(image);
@@ -78,6 +87,8 @@ public class TaskService {
 
         Task task = new Task();
         task.setDescription(description);
+        task.setFirstname(firstname);
+        task.setLastname(lastname);
         task.setPhoneNumber(Long.valueOf(phoneNumber));
         task.setStatus(status);
         task.setImages(storedImages);

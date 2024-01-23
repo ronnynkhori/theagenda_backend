@@ -30,13 +30,15 @@ public class TaskController {
 
 
 
-    @PostMapping("/submit")
+    @PostMapping(path = "submit")
     public ResponseEntity<Task> submitTask(@RequestParam String description,
                                            @RequestParam String phoneNumber,
+                                           @RequestParam String firstname,
+                                           @RequestParam String lastname,
                                            @RequestParam  RequestStatus status,
                                            @RequestParam("images") MultipartFile[] images) {
 
-        return new ResponseEntity<>(taskService.savedTask(description,phoneNumber,status,images), HttpStatus.CREATED);
+        return new ResponseEntity<>(taskService.savedTask(firstname, lastname,description,phoneNumber,status,images), HttpStatus.CREATED);
     }
 
 
@@ -74,7 +76,7 @@ public class TaskController {
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping(path = "{id}")
     public ResponseEntity<Void> deleteTaskById(@PathVariable Integer id) {
         taskService.deleteTaskById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

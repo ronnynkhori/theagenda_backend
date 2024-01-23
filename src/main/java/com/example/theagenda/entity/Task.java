@@ -25,6 +25,13 @@ public class Task extends AuditableEntity {
     @Column(name = "phone_number",unique = true)
     private Long phoneNumber;
 
+    @Column(name = "firstname")
+    private String firstname;
+
+
+    @Column(name = "lastname")
+    private String lastname;
+
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
