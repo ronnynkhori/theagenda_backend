@@ -24,9 +24,9 @@ pipeline {
         stage('DEPLOYMENT TO DIGITAL OCEAN') {
             steps {
                 sshagent (credentials: ['DigitalOceanSSH']) {
-                 sh "ssh -o StrictHostKeyChecking=no rnkhori@159.223.194.135 'mkdir -p /home/rnkhori/theagenda/backend'"
-                  sh "scp -r -o StrictHostKeyChecking=no  target/theagenda-1.0.0.jar rnkhori@164.92.135.84:~/theagenda/backend/theagenda.jar"
-                  sh "ssh rnkhori@164.92.135.84 'cd ~/theagenda && docker compose up -d --force-recreate --build backend'"
+                 sh "ssh -o StrictHostKeyChecking=no rnkhori@159.223.194.235 'mkdir -p /home/rnkhori/theagenda/backend'"
+                  sh "scp -r -o StrictHostKeyChecking=no  target/theagenda-1.0.0.jar rnkhori@159.223.194.235:~/theagenda/backend/theagenda.jar"
+                  sh "ssh rnkhori@159.223.194.235 'cd ~/theagenda && docker compose up -d --force-recreate --build backend'"
                 }
             }
 
