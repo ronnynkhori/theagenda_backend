@@ -6,7 +6,7 @@ server:
 spring:
   datasource:
     password: agenda
-    url: jdbc:postgresql://postges_db:5432/agenda
+    url: jdbc:postgresql://postges:5432/agenda
     username: agenda
   jpa:
     hibernate:

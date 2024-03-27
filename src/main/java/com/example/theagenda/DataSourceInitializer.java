@@ -20,11 +20,11 @@ public class DataSourceInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // Check if a user with the given email already exists
-        boolean userExists = userRepo.findByEmail("admin@gmail.com").isPresent();
+        boolean userExists = userRepo.findByEmail("admin@mail.com").isPresent();
 
         // If the user doesn't exist, create and save the new user
         if (!userExists) {
-            User user = User.builder().email("admin@gmail.com")
+            User user = User.builder().email("admin@mail.com")
                     .firstname("admin")
                     .lastname("admin")
                     .password(passwordEncoder.encode("admin"))
