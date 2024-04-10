@@ -55,6 +55,7 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("http://159.223.194.235");
         configuration.addAllowedOrigin("https://159.223.194.235");
         configuration.addAllowedOrigin("https://www.theagenda.co.bw");// Set the allowed origin
+        configuration.addAllowedOrigin("https://theagenda.co.bw");// Set the allowed origin
         configuration.addAllowedOrigin("http://localhost:4200");
         configuration.addAllowedOrigin("http://localhost:8100");
         configuration.addAllowedMethod("*"); // Allow all HTTP methods
