@@ -35,7 +35,7 @@ public class Task extends AuditableEntity {
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id")
     private List<Image> images;
 }

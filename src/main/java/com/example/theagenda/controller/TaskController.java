@@ -3,6 +3,7 @@ package com.example.theagenda.controller;
 import com.example.theagenda.entity.Task;
 import com.example.theagenda.entity.User;
 import com.example.theagenda.enums.RequestStatus;
+import com.example.theagenda.model.TaskDTO;
 import com.example.theagenda.service.FileStorageService;
 import com.example.theagenda.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +25,17 @@ public class TaskController {
     private final FileStorageService fileStorageService;
 
     @GetMapping(path = "requests")
-    public ResponseEntity<List<com.example.theagenda.entity.Task>> getAllRequests() {
-        return new ResponseEntity<List<Task>>(taskService.getAllRequests(), HttpStatus.OK);
+    public ResponseEntity<List<TaskDTO>> getAllRequests() {
+        return new ResponseEntity<List<TaskDTO>>(taskService.getAllRequests(), HttpStatus.OK);
     }
 
 
 
     @PostMapping(path = "submit")
-    public ResponseEntity<Task> submitTask(@RequestParam String description,
-                                           @RequestParam String phoneNumber,
-                                           @RequestParam String firstname,
+    public ResponseEntity<Task> submitTask(@RequestParam String firstname,
                                            @RequestParam String lastname,
+                                           @RequestParam String description,
+                                           @RequestParam String phoneNumber,
                                            @RequestParam  RequestStatus status,
                                            @RequestParam("images") MultipartFile[] images) {
 
@@ -46,11 +47,7 @@ public class TaskController {
     public ResponseEntity<com.example.theagenda.entity.Task> getAllRequestsById(@PathVariable Integer id) {
         Optional<Task> task = taskService.getAllRequestsById(id);
 
-        if (task.isPresent()) {
-            return new ResponseEntity<>(task.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return task.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(path = "user/{userId}/requests")

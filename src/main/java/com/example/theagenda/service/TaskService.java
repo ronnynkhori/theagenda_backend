@@ -5,19 +5,19 @@ import com.example.theagenda.UserRepo.TaskRepo;
 import com.example.theagenda.entity.Image;
 import com.example.theagenda.entity.Task;
 import com.example.theagenda.enums.RequestStatus;
+import com.example.theagenda.model.TaskDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,9 +36,27 @@ public class TaskService {
     public Optional<Task> getAllRequestsById(Integer id) {
         return  taskRepo.findById(id);
     }
+    @Transactional
+    public List<TaskDTO> getAllRequests() {
+        List<Task> tasks = taskRepo.findAll();
+        return tasks.stream()
+                .map(this::convertToTaskDTO)
+                .collect(Collectors.toList());
+    }
 
-    public List<Task> getAllRequests() {
-        return taskRepo.findAll();
+    public TaskDTO convertToTaskDTO(Task task) {
+        TaskDTO dto = new TaskDTO();
+        dto.setId(task.getId());
+        dto.setDescription(task.getDescription());
+        dto.setFirstname(task.getFirstname());
+        dto.setLastname(task.getLastname());
+        dto.setPhoneNumber(task.getPhoneNumber().toString());
+
+        List<String> base64Images = task.getImages().stream()
+                .map(Image::getBase64)
+                .collect(Collectors.toList());
+        dto.setImageBase64s(base64Images);
+        return dto;
     }
 
     public Task changeTaskStatus(Integer taskId, RequestStatus newStatus) {
@@ -63,25 +81,22 @@ public class TaskService {
             throw new EntityNotFoundException("Task not found with ID: " + taskId);
         }
     }
-
-    public Task savedTask(String description, String firstname, String lastname, String phoneNumber, RequestStatus status, MultipartFile[] images) {
+    @Transactional
+    public Task savedTask(String firstname, String lastname,String description,  String phoneNumber, RequestStatus status, MultipartFile[] images) {
         List<Image> storedImages = new ArrayList<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss"); // Define the date format
+
 
         for (MultipartFile file : images) {
             try {
-                String originalFilename = file.getOriginalFilename();
+                // Convert each file to Base64
+                byte[] bytes = file.getBytes();
+                String base64 = Base64.getEncoder().encodeToString(bytes);
 
-
-                String timestamp = dateFormat.format(new Date()); // Get current timestamp
-                String newFilename = timestamp + "_" + originalFilename; // Construct new filename with timestamp
-
-                String filePath = fileStorageService.storeFile(file, newFilename); // Pass the new filename to the storage service
                 Image image = new Image();
-                image.setPath(filePath);
+                image.setBase64(base64);
                 storedImages.add(image);
             } catch (IOException e) {
-                throw new RuntimeException("Error storing file", e);
+                throw new RuntimeException("Error processing file", e);
             }
         }
 
@@ -95,4 +110,7 @@ public class TaskService {
 
         return taskRepo.save(task);
     }
+
+
+
 }
